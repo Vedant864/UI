@@ -433,134 +433,177 @@ int main(){
         cout<<arr[i]<<" ";
  }
 }
-11 Write a c++ code for implementing quick sort.
+11) Write a c++ code for implementing quick sort.
 #include <iostream>
 using namespace std;
 
-int partition(int arr[], int low, int high) {
-    int pivot = arr[high];
-    int i = (low - 1);
+int main() {
+    int arr[] = {29, 10, 14, 37, 13};
+    int n = sizeof(arr) / sizeof(arr[0]);
 
-    for (int j = low; j <= high - 1; j++) {
-        if (arr[j] < pivot) {
-            i++;
-            swap(arr[i], arr[j]);
+
+    cout << "Original array: ";
+    for (int i = 0; i < n; i++)
+        cout << arr[i] << " ";
+    cout << endl;
+
+    int stack[100]; 
+    int top = -1;
+
+    stack[++top] = 0;
+    stack[++top] = n - 1;
+
+    while (top >= 0) {
+        int high = stack[top--];
+        int low = stack[top--];
+
+        int pivot = arr[high];
+        int i = low - 1;
+
+        for (int j = low; j < high; j++) {
+            if (arr[j] < pivot) {
+                i++;
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+
+        int temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+
+        int p = i + 1; 
+
+        if (p - 1 > low) {
+            stack[++top] = low;
+            stack[++top] = p - 1;
+        }
+
+        if (p + 1 < high) {
+            stack[++top] = p + 1;
+            stack[++top] = high;
         }
     }
-    swap(arr[i + 1], arr[high]);
-    return (i + 1);
-}
 
-void quickSort(int arr[], int low, int high) {
-    if (low < high) {
-        int pi = partition(arr, low, high);
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
-    }
-}
+    cout << "Sorted array:   ";
+    for (int i = 0; i < n; i++)
+        cout << arr[i] << " ";
 
-int main() {
-    int arr[] = {10, 7, 8, 9, 1, 5};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    quickSort(arr, 0, n - 1);
-    for (int i = 0; i < n; i++) cout << arr[i] << " ";
-    return 0;
+    return 0;
 }
-12) Write a c++ code for implementing merge sort.
+12) Write a c++ code for implementing merge sort
 #include <iostream>
 using namespace std;
 
-void merge(int arr[], int left, int mid, int right) {
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
+int main() {
+    int arr[] = {29, 10, 14, 37, 13};
+    int n = sizeof(arr) / sizeof(arr[0]);
 
-    int L[n1], R[n2];
+    cout << "Unsorted array: ";
+    for (int i = 0; i < n; i++)
+        cout << arr[i] << " ";
+    cout << endl;
 
-    for (int i = 0; i < n1; i++) L[i] = arr[left + i];
-    for (int i = 0; i < n2; i++) R[i] = arr[mid + 1 + i];
+    int temp[100];
 
-    int i = 0, j = 0, k = left;
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k++] = L[i++];
-        } else {
-            arr[k++] = R[j++];
+    for (int size = 1; size < n; size *= 2) {
+        for (int left = 0; left < n; left += 2 * size) {
+            int mid = min(left + size - 1, n - 1);
+            int right = min(left + 2 * size - 1, n - 1);
+
+            int i = left;
+            int j = mid + 1;
+            int k = left;
+
+            while (i <= mid && j <= right) {
+                if (arr[i] < arr[j])
+                    temp[k++] = arr[i++];
+                else
+                    temp[k++] = arr[j++];
+            }
+
+            while (i <= mid)
+                temp[k++] = arr[i++];
+            while (j <= right)
+                temp[k++] = arr[j++];
+
+            for (int x = left; x <= right; x++)
+                arr[x] = temp[x];
         }
     }
 
-    while (i < n1) arr[k++] = L[i++];
-    while (j < n2) arr[k++] = R[j++];
+    cout << "Sorted array:   ";
+    for (int i = 0; i < n; i++)
+        cout << arr[i] << " ";
+    cout << endl;
+
+    return 0;
 }
-
-void mergeSort(int arr[], int left, int right) {
-    if (left < right) {
-        int mid = left + (right - left) / 2;
-
-        mergeSort(arr, left, mid);
-        mergeSort(arr, mid + 1, right);
-        merge(arr, left, mid, right);
-    }
-}
-
-int main() {
-    int arr[] = {12, 11, 13, 5, 6, 7};
-    int n = sizeof(arr) / sizeof(arr[0]);
-
-    mergeSort(arr, 0, n - 1);
-
-    cout << "Sorted array: ";
-    for (int i = 0; i < n; i++) cout << arr[i] << " ";
-    return 0;
-}
-
 13) Write a c++ code for implementing linear search.
 #include <iostream>
 using namespace std;
 
-int linearSearch(int arr[], int n, int key) {
-    for (int i = 0; i < n; i++) {
-        if (arr[i] == key) return i;
-    }
-    return -1;
-}
-
 int main() {
-    int arr[] = {2, 3, 4, 10, 40};
+    int arr[] = {10, 20, 30, 40, 50};
     int n = sizeof(arr) / sizeof(arr[0]);
-    int key = 10;
-    int result = linearSearch(arr, n, key);
-    if (result != -1)
-        cout << "Element found at index " << result;
-    else
-        cout << "Element not found.";
-    return 0;
+    int key = 30;
+    bool found = false;
+
+    cout << "Array elements: ";
+    for (int i = 0; i < n; i++)
+        cout << arr[i] << " ";
+    cout << endl;
+
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == key) {
+            cout << "Element " << key << " found at index " << i << endl;
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "Element " << key << " not found in the array." << endl;
+    }
+
+    return 0;
 }
 14) Write a c++ code for implementing binary search.
 #include <iostream>
 using namespace std;
 
-int binarySearch(int arr[], int left, int right, int key) {
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (arr[mid] == key) return mid;
-        if (arr[mid] < key)
-            left = mid + 1;
-        else
-            right = mid - 1;
-    }
-    return -1;
-}
-
 int main() {
-    int arr[] = {2, 3, 4, 10, 40};
+    int arr[] = {10, 20, 30, 40, 50};
     int n = sizeof(arr) / sizeof(arr[0]);
-    int key = 10;
-    int result = binarySearch(arr, 0, n - 1, key);
-    if (result != -1)
-        cout << "Element found at index " << result;
-    else
-        cout << "Element not found.";
-    return 0;
+    int key = 30;
+    int low = 0, high = n - 1;
+    bool found = false;
+
+    cout << "Array elements: ";
+    for (int i = 0; i < n; i++)
+        cout << arr[i] << " ";
+    cout << endl;
+
+    while (low <= high) {
+        int mid = (low + high) / 2;
+
+        if (arr[mid] == key) {
+            cout << "Element " << key << " found at index " << mid << endl;
+            found = true;
+            break;
+        } else if (arr[mid] < key) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+
+    if (!found) {
+        cout << "Element " << key << " not found in the array." << endl;
+    }
+
+    return 0;
 }
 15) Write a c++ code for finding height of the BST.
 #include <iostream>
@@ -570,22 +613,54 @@ struct Node {
     int data;
     Node* left;
     Node* right;
-    Node(int val) : data(val), left(NULL), right(NULL) {}
 };
 
+Node* createNode(int value) {
+    Node* newNode = new Node();
+    newNode->data = value;
+    newNode->left = newNode->right = nullptr;
+    return newNode;
+}
+
+
+Node* insert(Node* root, int value) {
+    if (root == nullptr)
+        return createNode(value);
+
+    if (value < root->data)
+        root->left = insert(root->left, value);
+    else if (value > root->data)
+        root->right = insert(root->right, value);
+
+    return root;
+}
+
+
 int findHeight(Node* root) {
-    if (root == NULL) return -1;
+    if (root == nullptr)
+        return -1;  
     int leftHeight = findHeight(root->left);
     int rightHeight = findHeight(root->right);
-    return max(leftHeight, rightHeight) + 1;
+
+    return 1 + max(leftHeight, rightHeight);
 }
 
 int main() {
-    Node* root = new Node(10);
-    root->left = new Node(5);
-    root->right = new Node(20);
-    cout << "Height of the BST: " << findHeight(root);
-    return 0;
+    Node* root = nullptr;
+
+  
+    root = insert(root, 50);
+    insert(root, 30);
+    insert(root, 70);
+    insert(root, 20);
+    insert(root, 40);
+    insert(root, 60);
+    insert(root, 80);
+
+    int height = findHeight(root);
+    cout << "Height of the BST: " << height << endl;
+
+    return 0;
 }
 16) Write a c++ code for counting total number of nodes in BST.
 #include <iostream>
@@ -595,40 +670,67 @@ struct Node {
     int data;
     Node* left;
     Node* right;
-    Node(int val) : data(val), left(NULL), right(NULL) {}
 };
 
+Node* createNode(int value) {
+    Node* newNode = new Node();
+    newNode->data = value;
+    newNode->left = newNode->right = nullptr;
+    return newNode;
+}
+
+Node* insert(Node* root, int value) {
+    if (root == nullptr)
+        return createNode(value);
+    
+    if (value < root->data)
+        root->left = insert(root->left, value);
+    else
+        root->right = insert(root->right, value);
+    
+    return root;
+}
+
 int countNodes(Node* root) {
-    if (root == NULL) return 0;
-    return countNodes(root->left) + countNodes(root->right) + 1;
+    if (root == nullptr)
+        return 0;
+    return 1 + countNodes(root->left) + countNodes(root->right);
 }
 
 int main() {
-    Node* root = new Node(10);
-    root->left = new Node(5);
-    root->right = new Node(20);
-    cout << "Total number of nodes in BST: " << countNodes(root);
-    return 0;
+    Node* root = nullptr;
+
+    // Creating the BST
+    root = insert(root, 10);
+    insert(root, 5);
+    insert(root, 15);
+    insert(root, 3);
+    insert(root, 7);
+
+    cout << "Total number of nodes in the BST: " << countNodes(root) << endl;
+
+    return 0;
 }
 17) Write a c++ code for implementing BFS.
 #include <iostream>
 #include <queue>
 #include <vector>
+
 using namespace std;
 
-void bfs(int start, vector<vector<int>>& graph, int vertices) {
-    vector<bool> visited(vertices, false);
+void BFS(int start, vector<vector<int>>& adj, int V) {
+    vector<bool> visited(V, false); 
     queue<int> q;
 
+    visited[start] = true; 
     q.push(start);
-    visited[start] = true;
 
     while (!q.empty()) {
         int node = q.front();
         q.pop();
-        cout << node << " ";
+        cout << node << " "; 
 
-        for (int neighbor : graph[node]) {
+        for (int neighbor : adj[node]) {
             if (!visited[neighbor]) {
                 visited[neighbor] = true;
                 q.push(neighbor);
@@ -638,38 +740,57 @@ void bfs(int start, vector<vector<int>>& graph, int vertices) {
 }
 
 int main() {
-    vector<vector<int>> graph = {{1, 2}, {0, 3}, {0, 3}, {1, 2}};
-    bfs(0, graph, 4);  // Starting BFS from node 0
-    return 0;
+    int V = 6;
+    vector<vector<int>> adj(V);
+
+    adj[0].push_back(1);
+    adj[0].push_back(2);
+    adj[1].push_back(3);
+    adj[1].push_back(4);
+    adj[2].push_back(5);
+
+    cout << "BFS Traversal starting from node 0: ";
+    BFS(0, adj, V); 
+
+    return 0;
 }
 18) Write a c++ code for implementing DFS.
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
-void dfs(int node, vector<vector<int>>& graph, vector<bool>& visited) {
+void DFS(int node, vector<vector<int>>& adj, vector<bool>& visited) {
     visited[node] = true;
-    cout << node << " ";
+    cout << node << " "; 
 
-    for (int neighbor : graph[node]) {
+    for (int neighbor : adj[node]) {
         if (!visited[neighbor]) {
-            dfs(neighbor, graph, visited);
+            DFS(neighbor, adj, visited);
         }
     }
 }
 
 int main() {
-    vector<vector<int>> graph = {{1, 2}, {0, 3}, {0, 3}, {1, 2}};
-    vector<bool> visited(4, false);  // 4 vertices
-    dfs(0, graph, visited);  // Starting DFS from node 0
-    return 0;
+    int V = 6; 
+    vector<vector<int>> adj(V);
+
+    adj[0].push_back(1);
+    adj[0].push_back(2);
+    adj[1].push_back(3);
+    adj[1].push_back(4);
+    adj[2].push_back(5);
+
+    vector<bool> visited(V, false);  
+    cout << "DFS Traversal starting from node 0: ";
+    DFS(0, adj, visited);  
+
+    return 0;
 }
 19) Write a c++ code for implementing graph adjacency list and adjacency matrix.
 #include <iostream>
 #include <vector>
 using namespace std;
-
-// Adjacency List Representation
 void adjacencyList(vector<vector<int>>& graph) {
     for (int i = 0; i < graph.size(); i++) {
         cout << "Node " << i << ": ";
@@ -680,7 +801,6 @@ void adjacencyList(vector<vector<int>>& graph) {
     }
 }
 
-// Adjacency Matrix Representation
 void adjacencyMatrix(vector<vector<int>>& graph) {
     int n = graph.size();
     vector<vector<int>> matrix(n, vector<int>(n, 0));
@@ -711,22 +831,20 @@ int main() {
 using namespace std;
 
 int main() {
-    const int SIZE = 10;  // Fixed size hash table
-    int hashTable[SIZE] = {0};  // Initialize all elements to 0
-
-    // Inserting values into hash table
-    int values[] = {15, 25, 35};  // Example values
+    const int SIZE = 10; 
+    int hashTable[SIZE] = {0};  
+    int values[] = {15, 25, 35}; 
     for (int i = 0; i < 3; i++) {
         int key = values[i] % SIZE;
         while (hashTable[key] != 0) {
-            key = (key + 1) % SIZE;  // Linear probing
+            key = (key + 1) % SIZE;  
         }
         hashTable[key] = values[i];
     }
-
-    // Displaying hash table
     for (int i = 0; i < SIZE; i++) {
         cout << i << ": " << hashTable[i] << endl;
     }
     return 0;
 }
+
+
