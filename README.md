@@ -1,850 +1,437 @@
-Q1stack push and pop operation.
-
-#include <iostream>
-using namespace std;
-
-#define MAX 100
-
-class Stack{
-    private:
-         int top;
-         int arr[MAX];
-    public:
-         Stack(){
-            top=-1;
-         }    
-
-         //Push Operation
-         
-         void push(int value){
-            if(top>=MAX-1){
-                cout<<"Stack Over flow,cannot push"<<value<<endl;
-            }
-            else{
-                arr[++top]=value;
-                cout<<value<<" pushed to stack"<<endl;
-             }
-         }
-         //Pop Operation
-         void pop(){
-               if(top<0){
-                cout<<"Stack Underflow:Cannot Pop"<<endl;
-                 }
-                 else{
-                    cout<<arr[top--]<<" popped from stack"<<endl;
-                 }
-         }
-
-         //Display the stack
-         void display(){
-            if(top<0){
-                cout<<"Stack is empty"<<endl;
-            }
-            else{
-                cout<<"Stack content:";
-                for(int i=0;i<=top;i++){
-                    cout<<arr[i]<<" ";
-                }
-                cout<<endl;
-            }
-         }
-
-};
-int main(){
-    Stack s;
-    s.push(10);
-    s.push(20);
-    s.push(30);
-    s.display();
-
-    s.pop();
-    s.display();
-
-    s.pop();
-    s.pop();
-    s.pop();
-
-    return 0;
-}
-Q2 Write a c++ code for balanced parentheses.
-#include <iostream>
-#include <stack>
-#include <string>
-
-using namespace std;
-
-bool isBalanced(string expr) {
-    stack<char> s;
-
-    for (char ch : expr) {
-        if (ch == '(') {
-            s.push(ch);
-        } else if (ch == ')') {
-            if (s.empty()) return false;
-            s.pop();
-        }
-    }
-
-    return s.empty();
-}
-
-int main() {
-    string input;
-    cout << "Enter expression: ";
-    cin >> input;
-
-    if (isBalanced(input)){
-        cout << "Balanced" << endl;
-    }else{
-        cout << "Not Balanced" << endl;
-    }
-
-    return 0;
-}
-3) Write a c++ code for implementing queue using two stacks.
-
-#include <iostream>
-#include <stack>
-
-using namespace std;
-
-class Queue{
-    private:
-       stack<int> s1,s2;
-
-    public:
-      //enqueue operations
-      void enqueue(int x){
-        s1.push(x);
-      }
-
-      //dequeue operations
-      int dequeue(){
-        if(s2.empty()){
-            if(s1.empty()){
-                cout<<"Queue is empty"<<endl;
-                return -1;
-            }
-            //Transfer s1 to s2
-            while(!s1.empty()){
-                s2.push(s1.top());
-                s1.pop();
-            }
-        }
-        int front = s2.top();
-        s2.pop();
-        return front;
-      }
-
-      //peek operations 
-      int peek(){
-        if(s2.empty()){
-            if(s1.empty()){
-                cout<<"Queue is empty"<<endl;
-                return -1;
-            }
-            //Transfer s1 to s2 
-            while(!s1.empty()){
-                s2.push(s1.top());
-                s1.pop();
-            }
-        }
-        return s2.top();
-      }
-
-      //check for empty value 
-      bool isEmpty(){
-        return s1.empty() && s2.empty();
-      }
-};
-int main(){
-    Queue q;
-
-    q.enqueue(10);
-    q.enqueue(20);
-    q.enqueue(30);
-
-    cout<<"Front Element:"<<q.peek()<<endl;
-    cout<<"Dequeued:"<<q.dequeue()<<endl;
-    cout<<"Dequeued:"<<q.dequeue()<<endl;
-    cout<<"Is Queue Empty ? "<<(q.isEmpty() ? "Yes" : "No")<<endl;
-    cout<<"Dequeue:"<<q.dequeue()<<endl;
-    cout<<"Is Queue is Empty ? "<<(q.isEmpty() ? "Yes":"No")<<endl;
-}
-4) Write a c++ code for implementing queue front and rear operation.
-#include <iostream>
-using namespace std;
-
-#define SIZE 5
-
-int queue[SIZE];
-int front=-1,rear=-1;
-
-void enqueue(int value){
-    if(rear==SIZE-1){
-        cout<<"Queue is full\n";
-    }else{
-        if(front==-1)front=0;
-        rear++;
-        queue[rear]=value;
-     cout<<value<<"enqueued\n";
-    }
-}
-void dequeue(){
-    if(front==-1||front>rear){
-        cout<<"Queue is full\n";
-    }else{
-        cout<<queue[front]<<"dequeued\n";
-    }
-}
-
-void showFront(){
-    if(front==-1||front>rear){
-        cout<<"Queue is full\n";
-    }else{
-        cout<<"Front:"<<queue[front]<<endl;
-    }
-}
-void showRear(){
-    if(rear==-1|| front>rear){
-        cout<<"Queue is full\n";
-    }else{
-        cout<<"Rear:"<<queue[rear]<<endl;
-    }
-}
-int main(){
-    enqueue(10);
-    enqueue(20);
-    enqueue(30);
-
-    showFront();
-    showRear();
-
-    dequeue();
-    showFront();
-    showRear();
-
-    return 0;
-}
-5) Write a c++ code for counting total number of nodes in linked list.
-#include <iostream>
-using namespace std;
-
-struct Node{
-    int data;
-    Node*next;
-};
-int main(){
-    Node*head=new Node();
-    Node*second=new Node();
-    Node*third=new Node();
-
-    head->data=1;
-    head->next=second;
-
-    second->data=2;
-    second->next=third;
-
-    third->data=3;
-    third->next=nullptr;
-
-    int count=0;
-    Node*temp=head;
-    while(temp!=nullptr){
-        count++;
-        temp=temp->next;
-    }
-    cout<<"The number of nodes are "<<count<<endl;
-
-    return 0;
-
-}
-6) Write a c++ code for finding cycle in the linked list.
-
-#include <iostream>
-using namespace std;
-
-struct Node{
-    int data;
-    Node*next;
-};
-
-bool hasCycle(Node*head){
-    Node*slow=head;
-    Node*fast=head;
-
-    while(fast && fast->next){
-        slow=slow->next;
-        fast=fast->next->next;
-
-        if(slow==fast)
-        return true;
-    }
-    return false;
-}
-int main(){
-    Node*a=new Node{1,nullptr};
-    Node*b=new Node{2,nullptr};
-    Node*c=new Node{3,nullptr};
-
-    a->next=b;
-    b->next=c;
-    c->next=b;
-   
-    if(hasCycle(a)){
-        cout<<"Cycle is detected in the linked list\n";
-    }
-    else{
-        cout<<"No cycle is detected in the linked list\n";
-    }
-    return 0;
-}
-7) Write a c++ code for reversing linked list.
-#include <iostream>
-using namespace std;
-
-struct Node{
-    int data;
-    Node*next;
-};
-void printList(Node*head){
-    while(head){
-        cout<<head->data<<"->";
-        head=head->next;
-    }
-    cout<<"Null"<<endl;
-}
-Node*reverseList(Node*head){
-    Node*prev=nullptr;
-    Node*current=head;
-
-    while(current){
-        Node*next=current->next;
-        current->next=prev;
-        prev=current;
-        current=next;
-    }
-    return prev;
-}
-int main(){
-    Node*head=new Node{1,nullptr};
-    head->next=new Node{2,nullptr};
-    head->next->next=new Node{3,nullptr};
-
-    cout<<"Original List: ";
-    printList(head);
-
-    head=reverseList(head);
-    cout<<"Reverse List: ";
-    printList(head);
-
-    return 0;
-}
-8) Write a c++ code for implementing bubble sort.
-#include <iostream>
-using namespace std;
-
-int main(){
-    int arr[]={56,34,64,20,15};
-    int n=sizeof(arr)/sizeof(arr[0]);
-
-cout<<"Original array: ";
-for(int i=0;i<n;i++){
-    cout<<arr[i]<<" ";
-}
-cout<<endl;
-
-
-
-//bubble sort 
-for(int i=0;i<n-1;i++){
-    for(int j=0;j<n-i-1;j++){
-
-        if(arr[j]>arr[j+1]){
-
-           int temp=arr[j];
-            arr[j]=arr[j+1];
-            arr[j+1]=temp;
-        }
-    }
-}
-cout<<"Sorted array: ";
-for(int i=0;i<n;i++){
-    cout<<arr[i]<<" ";
-}
-return 0;
-}
-9) Write a c++ code for implementing selection sort.
-#include <iostream>
-using namespace std;
-
-int main(){
-    int arr[]={45,34,65,12,67,36,15};
-    int n = sizeof(arr)/sizeof(arr[0]);
-
-    cout<<"Original array: ";
-    for(int i=0;i<n;i++){
-        cout<<arr[i]<<" ";
-    }
-    cout<<endl;
-  
-    for(int i=0;i<n-1;i++){
-        int min=i;
-        for(int j=i+1;j<n;j++){
-            if(arr[j]<arr[min])
-            min=j;
-        }
-        int temp=arr[i];
-        arr[i]=arr[min];
-        arr[min]=temp;
-    }
-    cout<<"Sorted array: ";
-    for(int i=0;i<n;i++){
-        cout<<arr[i]<<" ";
-    }
-    return 0;
-}
-10)Write a c++ code for implementing insertion sort.
-#include <iostream>
-using namespace std;
-
-int main(){
-    int arr[]={34,23,54,12,75,45};
-    int n = sizeof(arr)/sizeof(arr[0]);
-
-    cout<<"Original array: ";
-    for(int i=0;i<n;i++){
-        cout<<arr[i]<<" ";
-    }
-    cout<<endl;
-
-    for(int i=1;i<n;i++){
-        int key=arr[i];
-        int j=i-1;
-
-        while(j>=0 && arr[j]>key){
-            arr[j+1]=arr[j];
-            j--;
-        }
-        arr[j+1]=key;
-    }
-    cout<<"Sorted array: ";
-    for(int i=0;i<n;i++){
-        cout<<arr[i]<<" ";
- }
-}
-11) Write a c++ code for implementing quick sort.
-#include <iostream>
-using namespace std;
-
-int main() {
-    int arr[] = {29, 10, 14, 37, 13};
-    int n = sizeof(arr) / sizeof(arr[0]);
-
-
-    cout << "Original array: ";
-    for (int i = 0; i < n; i++)
-        cout << arr[i] << " ";
-    cout << endl;
-
-    int stack[100]; 
-    int top = -1;
-
-    stack[++top] = 0;
-    stack[++top] = n - 1;
-
-    while (top >= 0) {
-        int high = stack[top--];
-        int low = stack[top--];
-
-        int pivot = arr[high];
-        int i = low - 1;
-
-        for (int j = low; j < high; j++) {
-            if (arr[j] < pivot) {
-                i++;
-                int temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-            }
-        }
-
-        int temp = arr[i + 1];
-        arr[i + 1] = arr[high];
-        arr[high] = temp;
-
-        int p = i + 1; 
-
-        if (p - 1 > low) {
-            stack[++top] = low;
-            stack[++top] = p - 1;
-        }
-
-        if (p + 1 < high) {
-            stack[++top] = p + 1;
-            stack[++top] = high;
-        }
-    }
-
-    cout << "Sorted array:   ";
-    for (int i = 0; i < n; i++)
-        cout << arr[i] << " ";
-
-    return 0;
-}
-12) Write a c++ code for implementing merge sort
-#include <iostream>
-using namespace std;
-
-int main() {
-    int arr[] = {29, 10, 14, 37, 13};
-    int n = sizeof(arr) / sizeof(arr[0]);
-
-    cout << "Unsorted array: ";
-    for (int i = 0; i < n; i++)
-        cout << arr[i] << " ";
-    cout << endl;
-
-    int temp[100];
-
-    for (int size = 1; size < n; size *= 2) {
-        for (int left = 0; left < n; left += 2 * size) {
-            int mid = min(left + size - 1, n - 1);
-            int right = min(left + 2 * size - 1, n - 1);
-
-            int i = left;
-            int j = mid + 1;
-            int k = left;
-
-            while (i <= mid && j <= right) {
-                if (arr[i] < arr[j])
-                    temp[k++] = arr[i++];
-                else
-                    temp[k++] = arr[j++];
-            }
-
-            while (i <= mid)
-                temp[k++] = arr[i++];
-            while (j <= right)
-                temp[k++] = arr[j++];
-
-            for (int x = left; x <= right; x++)
-                arr[x] = temp[x];
-        }
-    }
-
-    cout << "Sorted array:   ";
-    for (int i = 0; i < n; i++)
-        cout << arr[i] << " ";
-    cout << endl;
-
-    return 0;
-}
-13) Write a c++ code for implementing linear search.
-#include <iostream>
-using namespace std;
-
-int main() {
-    int arr[] = {10, 20, 30, 40, 50};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    int key = 30;
-    bool found = false;
-
-    cout << "Array elements: ";
-    for (int i = 0; i < n; i++)
-        cout << arr[i] << " ";
-    cout << endl;
-
-    for (int i = 0; i < n; i++) {
-        if (arr[i] == key) {
-            cout << "Element " << key << " found at index " << i << endl;
-            found = true;
-            break;
-        }
-    }
-
-    if (!found) {
-        cout << "Element " << key << " not found in the array." << endl;
-    }
-
-    return 0;
-}
-14) Write a c++ code for implementing binary search.
-#include <iostream>
-using namespace std;
-
-int main() {
-    int arr[] = {10, 20, 30, 40, 50};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    int key = 30;
-    int low = 0, high = n - 1;
-    bool found = false;
-
-    cout << "Array elements: ";
-    for (int i = 0; i < n; i++)
-        cout << arr[i] << " ";
-    cout << endl;
-
-    while (low <= high) {
-        int mid = (low + high) / 2;
-
-        if (arr[mid] == key) {
-            cout << "Element " << key << " found at index " << mid << endl;
-            found = true;
-            break;
-        } else if (arr[mid] < key) {
-            low = mid + 1;
-        } else {
-            high = mid - 1;
-        }
-    }
-
-    if (!found) {
-        cout << "Element " << key << " not found in the array." << endl;
-    }
-
-    return 0;
-}
-15) Write a c++ code for finding height of the BST.
-#include <iostream>
-using namespace std;
-
-struct Node {
-    int data;
-    Node* left;
-    Node* right;
-};
-
-Node* createNode(int value) {
-    Node* newNode = new Node();
-    newNode->data = value;
-    newNode->left = newNode->right = nullptr;
-    return newNode;
-}
-
-
-Node* insert(Node* root, int value) {
-    if (root == nullptr)
-        return createNode(value);
-
-    if (value < root->data)
-        root->left = insert(root->left, value);
-    else if (value > root->data)
-        root->right = insert(root->right, value);
-
-    return root;
-}
-
-
-int findHeight(Node* root) {
-    if (root == nullptr)
-        return -1;  
-    int leftHeight = findHeight(root->left);
-    int rightHeight = findHeight(root->right);
-
-    return 1 + max(leftHeight, rightHeight);
-}
-
-int main() {
-    Node* root = nullptr;
-
-  
-    root = insert(root, 50);
-    insert(root, 30);
-    insert(root, 70);
-    insert(root, 20);
-    insert(root, 40);
-    insert(root, 60);
-    insert(root, 80);
-
-    int height = findHeight(root);
-    cout << "Height of the BST: " << height << endl;
-
-    return 0;
-}
-16) Write a c++ code for counting total number of nodes in BST.
-#include <iostream>
-using namespace std;
-
-struct Node {
-    int data;
-    Node* left;
-    Node* right;
-};
-
-Node* createNode(int value) {
-    Node* newNode = new Node();
-    newNode->data = value;
-    newNode->left = newNode->right = nullptr;
-    return newNode;
-}
-
-Node* insert(Node* root, int value) {
-    if (root == nullptr)
-        return createNode(value);
+Practical No1-Install and set up MySQL. Create a database and a table to store employee details. Perform basic operations like INSERT, UPDATE, and DELETE using SELECT queries.
+
+step1-Create Database
+       CREATE DATABASE company_db;
+
+step2-Create Employee Table
+    CREATE TABLE employees (
+    emp_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    department VARCHAR(50),
+    salary DECIMAL(10,2),
+    join_date DATE
+);
+
+step3-INSERT Data
+INSERT INTO employees (name, department, salary, join_date)
+VALUES 
+('Shreyas', 'AI', 50000, '2024-06-01'),
+('Ravi', 'HR', 40000, '2023-08-15'),
+('Priya', 'IT', 60000, '2022-01-10');
+
+SELECT * FROM employees;
+
+step4- UPDATE Data
+   UPDATE employees
+SET salary = 55000
+WHERE name = 'Shreyas';
+
+step5-DELETE Data
+        DELETE FROM employees
+WHERE name = 'Ravi';
+
+step6-Useful SELECT Queries
+SELECT name, salary FROM employees;
+SELECT * FROM employees WHERE salary > 50000;
+SELECT * FROM employees ORDER BY salary DESC;
+SELECT COUNT(*) FROM employees;
+
+Practical No-2-Create a table with columns for EmployeeID, Name, Salary, JoiningDate, and ActiveStatus using different data types. Insert sample data and perform queries to manipulate and retrieve data.
+
+step1-Create the Table
+   CREATE TABLE employees (
+    EmployeeID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(100) NOT NULL,
+    Salary DECIMAL(10,2),
+    JoiningDate DATE,
+    ActiveStatus BOOLEAN
+);
+
+step2-Insert Sample Data
+    INSERT INTO employees (Name, Salary, JoiningDate, ActiveStatus)
+VALUES
+('Shreyas', 50000.00, '2024-06-01', TRUE),
+('Ravi', 42000.50, '2023-03-15', TRUE),
+('Priya', 61000.75, '2022-11-20', FALSE),
+('Anjali', 48000.00, '2021-07-10', TRUE);
+
+step3-Retrieve Data (SELECT Queries)
+     SELECT * FROM employees;
+
+     SELECT * FROM employees
+    WHERE ActiveStatus = TRUE;
     
-    if (value < root->data)
-        root->left = insert(root->left, value);
-    else
-        root->right = insert(root->right, value);
-    
-    return root;
-}
+     SELECT Name, Salary FROM employees
+     WHERE Salary > 50000;
+     
+     SELECT * FROM employees
+    ORDER BY Salary DESC;
 
-int countNodes(Node* root) {
-    if (root == nullptr)
-        return 0;
-    return 1 + countNodes(root->left) + countNodes(root->right);
-}
+step4-Update Data
+      UPDATE employees
+      SET Salary = 55000
+      WHERE Name = 'Shreyas';
+  
+     UPDATE employees
+    SET ActiveStatus = FALSE
+    WHERE Name = 'Ravi';
 
-int main() {
-    Node* root = nullptr;
+step5-Delete Data
+          DELETE FROM employees
+         WHERE ActiveStatus = FALSE;
 
-    // Creating the BST
-    root = insert(root, 10);
-    insert(root, 5);
-    insert(root, 15);
-    insert(root, 3);
-    insert(root, 7);
+step6- Useful Analytical Queries
+🔹 Count total employees
+SELECT COUNT(*) AS TotalEmployees FROM employees;
+🔹 Average salary
+SELECT AVG(Salary) AS AvgSalary FROM employees;
+🔹 Highest salary
+SELECT MAX(Salary) AS HighestSalary FROM employees;
 
-    cout << "Total number of nodes in the BST: " << countNodes(root) << endl;
 
-    return 0;
-}
-17) Write a c++ code for implementing BFS.
-#include <iostream>
-#include <queue>
-#include <vector>
+Practical3-Create a table to store employee information with constraints like Primary Key, Foreign Key, and Unique. Insert valid and invalid data to test the constraints.
 
-using namespace std;
+step1-Create Department Table (for Foreign Key)
 
-void BFS(int start, vector<vector<int>>& adj, int V) {
-    vector<bool> visited(V, false); 
-    queue<int> q;
+CREATE TABLE departments (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR(100) UNIQUE
+);
 
-    visited[start] = true; 
-    q.push(start);
+step2-Create Employee Table with Constraints
 
-    while (!q.empty()) {
-        int node = q.front();
-        q.pop();
-        cout << node << " "; 
+CREATE TABLE employees (
+    emp_id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(100) UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    salary DECIMAL(10,2) CHECK (salary > 0),
+    dept_id INT,
+    FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
+);
 
-        for (int neighbor : adj[node]) {
-            if (!visited[neighbor]) {
-                visited[neighbor] = true;
-                q.push(neighbor);
-            }
-        }
-    }
-}
+step3-Insert VALID Data
 
-int main() {
-    int V = 6;
-    vector<vector<int>> adj(V);
+INSERT INTO employees (email, name, salary, dept_id)
+VALUES
+('shreyas@gmail.com', 'Shreyas', 50000, 2),
+('ravi@gmail.com', 'Ravi', 40000, 1),
+('priya@gmail.com', 'Priya', 60000, 3);
 
-    adj[0].push_back(1);
-    adj[0].push_back(2);
-    adj[1].push_back(3);
-    adj[1].push_back(4);
-    adj[2].push_back(5);
+step4-Insert INVALID Data (Testing Constraints)
 
-    cout << "BFS Traversal starting from node 0: ";
-    BFS(0, adj, V); 
+INSERT INTO employees (email, name, salary, dept_id)
+VALUES ('shreyas@gmail.com', 'Amit', 45000, 2);
 
-    return 0;
-}
-18) Write a c++ code for implementing DFS.
-#include <iostream>
-#include <vector>
+INSERT INTO employees (email, name, salary, dept_id)
+VALUES ('amit@gmail.com', 'Amit', 45000, 10);
 
-using namespace std;
+INSERT INTO employees (email, name, salary, dept_id)
+VALUES ('neha@gmail.com', 'Neha', -1000, 1);
 
-void DFS(int node, vector<vector<int>>& adj, vector<bool>& visited) {
-    visited[node] = true;
-    cout << node << " "; 
+INSERT INTO employees (email, name, salary, dept_id)
+VALUES ('raj@gmail.com', NULL, 30000, 1);
 
-    for (int neighbor : adj[node]) {
-        if (!visited[neighbor]) {
-            DFS(neighbor, adj, visited);
-        }
-    }
-}
+step5-View Data
+SELECT * FROM employees;
 
-int main() {
-    int V = 6; 
-    vector<vector<int>> adj(V);
+Practical4-Create a table for Customer details with various integrity constraints like NOT NULL, CHECK, and DEFAULT. Insert valid and invalid data to test these constraints and ensure data integrity.
 
-    adj[0].push_back(1);
-    adj[0].push_back(2);
-    adj[1].push_back(3);
-    adj[1].push_back(4);
-    adj[2].push_back(5);
+step1-Create Customer Table with Constraints
 
-    vector<bool> visited(V, false);  
-    cout << "DFS Traversal starting from node 0: ";
-    DFS(0, adj, visited);  
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    age INT CHECK (age >= 18),
+    city VARCHAR(50) DEFAULT 'Unknown',
+    balance DECIMAL(10,2) CHECK (balance >= 0) DEFAULT 0.00,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-    return 0;
-}
-19) Write a c++ code for implementing graph adjacency list and adjacency matrix.
-#include <iostream>
-#include <vector>
-using namespace std;
-void adjacencyList(vector<vector<int>>& graph) {
-    for (int i = 0; i < graph.size(); i++) {
-        cout << "Node " << i << ": ";
-        for (int j : graph[i]) {
-            cout << j << " ";
-        }
-        cout << endl;
-    }
-}
+step2-Insert VALID Data
 
-void adjacencyMatrix(vector<vector<int>>& graph) {
-    int n = graph.size();
-    vector<vector<int>> matrix(n, vector<int>(n, 0));
-    for (int i = 0; i < n; i++) {
-        for (int j : graph[i]) {
-            matrix[i][j] = 1;
-        }
-    }
+INSERT INTO customers (name, email, age, city, balance)
+VALUES
+('Shreyas', 'shreyas@gmail.com', 21, 'Pune', 1500.50),
+('Ravi', 'ravi@gmail.com', 30, 'Mumbai', 2000.00);
 
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            cout << matrix[i][j] << " ";
-        }
-        cout << endl;
-    }
-}
+->Using DEFAULT values
+INSERT INTO customers (name, email, age)
+VALUES ('Priya', 'priya@gmail.com', 25);
 
-int main() {
-    vector<vector<int>> graph = {{1, 2}, {0, 3}, {0, 3}, {1, 2}};
-    cout << "Adjacency List:" << endl;
-    adjacencyList(graph);
-    cout << "Adjacency Matrix:" << endl;
-    adjacencyMatrix(graph);
-    return 0;
-}
-20) Write a c++ code to implement hash table.
-#include <iostream>
-using namespace std;
+step3-Insert INVALID Data (to Test Constraints)
 
-int main() {
-    const int SIZE = 10; 
-    int hashTable[SIZE] = {0};  
-    int values[] = {15, 25, 35}; 
-    for (int i = 0; i < 3; i++) {
-        int key = values[i] % SIZE;
-        while (hashTable[key] != 0) {
-            key = (key + 1) % SIZE;  
-        }
-        hashTable[key] = values[i];
-    }
-    for (int i = 0; i < SIZE; i++) {
-        cout << i << ": " << hashTable[i] << endl;
-    }
-    return 0;
-}
+INSERT INTO customers (name, email, age)
+VALUES (NULL, 'test@gmail.com', 22);
+
+INSERT INTO customers (name, email, age)
+VALUES ('Amit', 'shreyas@gmail.com', 28);
+
+INSERT INTO customers (name, email, age)
+VALUES ('Neha', 'neha@gmail.com', 15);
+
+INSERT INTO customers (name, email, age, balance)
+VALUES ('Raj', 'raj@gmail.com', 26, -500);
+
+step4-Retrieve Data
+
+SELECT * FROM customers;
+
+Practical5-Use DDL commands to create tables and DML commands to insert, update, and delete data. Write SELECT queries to retrieve and verify data changes.
+
+step1-DDL — Create Table
+
+CREATE TABLE employees (
+    emp_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    department VARCHAR(50),
+    salary DECIMAL(10,2),
+    join_date DATE
+);
+
+step2-DML — Insert Data
+
+INSERT INTO employees (name, department, salary, join_date)
+VALUES
+('Shreyas', 'AI', 50000, '2024-06-01'),
+('Ravi', 'HR', 40000, '2023-03-15'),
+('Priya', 'IT', 60000, '2022-11-20');
+
+step3-DML — Update Data
+
+UPDATE employees
+SET salary = 55000
+WHERE name = 'Shreyas';
+
+step4-DML — Delete Data
+
+DELETE FROM employees
+WHERE name = 'Ravi';
+
+step5- Additional SELECT Queries (Verification + Insight)
+🔹 Employees with salary > 50,000
+SELECT * FROM employees
+WHERE salary > 50000;
+🔹 Sort by salary (descending)
+SELECT * FROM employees
+ORDER BY salary DESC;
+🔹 Count employees
+SELECT COUNT(*) AS total_employees FROM employees;
+
+Practical6-Normalize an unnormalized schema for storing customer orders into 1NF, 2NF, 3NF, and BCNF. Apply key constraints like Primary Key and Foreign Key.
+
+Step1-First Normal Form (1NF)
+
+CREATE TABLE OrderDetails_1NF (
+    OrderID INT,
+    CustomerName VARCHAR(100),
+    CustomerAddress VARCHAR(200),
+    ProductID INT,
+    ProductName VARCHAR(100),
+    Quantity INT,
+    Price DECIMAL(10,2)
+);
+
+step2-Second Normal Form (2NF)
+
+-- Orders table
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    CustomerName VARCHAR(100),
+    CustomerAddress VARCHAR(200)
+);
+
+-- Products table
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(100),
+    Price DECIMAL(10,2)
+);
+
+-- Order Items table
+CREATE TABLE OrderItems (
+    OrderID INT,
+    ProductID INT,
+    Quantity INT,
+    PRIMARY KEY (OrderID, ProductID),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+step3-Third Normal Form (3NF)
+
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    CustomerName VARCHAR(100),
+    CustomerAddress VARCHAR(200)
+);
+
+-- Modify Orders table
+CREATE TABLE Orders_3NF (
+    OrderID INT PRIMARY KEY,
+    CustomerID INT,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+step4-Boyce-Codd Normal Form (BCNF)
+
+ Rule: Every determinant must be a candidate key
+
+Check all tables:
+
+Customers → OK (CustomerID → all)
+Products → OK (ProductID → all)
+Orders_3NF → OK
+OrderItems → (OrderID, ProductID) → Quantity ✔
+
+No hidden functional dependency remains.
+
+✔ Already in BCNF
+
+step5-Final Structure (Clean Design)
+
+You now have:
+
+--Customers
+CustomerID (PK), CustomerName, CustomerAddress
+--Orders
+OrderID (PK), CustomerID (FK)
+--Products
+ProductID (PK), ProductName, Price
+--OrderItems
+OrderID (FK), ProductID (FK), Quantity
+PRIMARY KEY (OrderID, ProductID)
+
+Practical7-Create a Sales table and use aggregate functions like COUNT, SUM, AVG, MIN, and MAX to summarize sales data and calculate statistics.
+
+step1-Create Sales Table
+
+CREATE TABLE Sales (
+    sale_id INT PRIMARY KEY AUTO_INCREMENT,
+    product_name VARCHAR(100),
+    quantity INT,
+    price DECIMAL(10,2),
+    sale_date DATE
+);
+
+step2-Insert Sample Data
+
+INSERT INTO Sales (product_name, quantity, price, sale_date)
+VALUES
+('Laptop', 2, 50000, '2025-01-10'),
+('Mouse', 5, 500, '2025-01-11'),
+('Keyboard', 3, 1500, '2025-01-12'),
+('Laptop', 1, 52000, '2025-01-13'),
+('Mouse', 10, 450, '2025-01-14');
+
+step3-View Data
+
+SELECT * FROM Sales;
+
+step4-Aggregate Functions (Core Part)
+
+COUNT — Total number of sales
+SELECT COUNT(*) AS total_sales FROM Sales;
+
+SUM — Total revenue
+SELECT SUM(quantity * price) AS total_revenue FROM Sales;
+
+AVG — Average price
+SELECT AVG(price) AS avg_price FROM Sales;
+
+MIN — Lowest price
+SELECT MIN(price) AS lowest_price FROM Sales;
+
+MAX — Highest price
+SELECT MAX(price) AS highest_price FROM Sales;
+
+step5-Group-Based Aggregation (More Realistic)
+
+SELECT 
+    product_name,
+    COUNT(*) AS total_orders,
+    SUM(quantity) AS total_quantity,
+    SUM(quantity * price) AS total_revenue,
+    AVG(price) AS avg_price,
+    MIN(price) AS min_price,
+    MAX(price) AS max_price
+FROM Sales
+GROUP BY product_name;
+
+Practical8-Design and implement any 5-query using MongoDB.
+
+step1-Create Database & Collection
+
+use companyDB
+
+step2-Insert Sample Documents
+
+db.sales.insertMany([
+  {
+    customer: "Shreyas",
+    product: "Laptop",
+    quantity: 1,
+    price: 50000,
+    city: "Pune",
+    date: new Date("2025-01-10")
+  },
+  {
+    customer: "Ravi",
+    product: "Mouse",
+    quantity: 5,
+    price: 500,
+    city: "Mumbai",
+    date: new Date("2025-01-11")
+  },
+  {
+    customer: "Priya",
+    product: "Keyboard",
+    quantity: 2,
+    price: 1500,
+    city: "Delhi",
+    date: new Date("2025-01-12")
+  },
+  {
+    customer: "Shreyas",
+    product: "Mouse",
+    quantity: 3,
+    price: 450,
+    city: "Pune",
+    date: new Date("2025-01-13")
+  }
+])
+
+step3-
+Query 1 — Retrieve All Documents
+
+db.sales.find()
+
+Query 2 — Filter Data (Condition)
+
+db.sales.find({ city: "Pune" })
+
+Query 3 — Projection (Select Specific Fields)
+
+db.sales.find(
+  { product: "Mouse" },
+  { customer: 1, quantity: 1, _id: 0 }
+)
+
+Query 4 — Update Data
+
+db.sales.updateOne(
+  { customer: "Ravi" },
+  { $set: { price: 550 } }
+)
+
+Query 5 — Delete Data
+
+db.sales.deleteOne({ customer: "Priya" })
+
+
+
+
+
+
 
 
